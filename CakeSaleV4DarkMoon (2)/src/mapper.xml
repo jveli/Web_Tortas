@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="dawi">
+
+	<select id="SQL_traerAccesosDeUsuario" 
+							parameterType="java.lang.String"
+							resultType="accesoBeanIbatis">
+			SELECT DISTINCT
+					r.idAcceso,
+					r.descripcion,
+					r.ruta
+			FROM
+					ACCESO r,
+					ROL_ACCESO p,
+					ROL t,
+					USUARIO u
+			WHERE
+					r.idAcceso = p.idAcceso AND
+					p.idRol = t.idRol AND
+					t.idRol = u.idRol AND	
+					u.idUsuario = #{idUsuario}
+			ORDER BY 2		 					
+		
+	</select>
+	
+	<select id="SQL_login" 	parameterType="usuarioBeanIbatis" 
+						    resultType="usuarioBeanIbatis">
+			SELECT 
+				idUsuario as idUsuario,
+				nombres as nombres,
+				apellidos as apellidos,
+				correo as correo,
+				cell as cell,
+				fechaRegistro as fechaRegistro,
+				fechaNacimiento as fechaNacimiento, 
+				direccion as direccion,
+				dni as dni,
+				sexo as sexo,
+				login as login,
+				password as password,
+				estado as estado
+			FROM
+				USUARIO
+			WHERE
+				login = #{login} AND password = #{password} 	
+	</select>
+	
+	<!-- MANTENIMIENTO PRODUCTO**************************************************** -->
+	
+	<select id="SQL_registraProducto"	parameterType="productoBeanIbatis" >
+		INSERT INTO PRODUCTO VALUES(null, 
+				#{nombre},
+				#{precio},
+				#{ImagenBytes},
+				#{ImagenFileName},
+				#{ImagenContentType},
+				#{estado},
+				#{descripcion},
+				#{idTipoProducto},
+				#{idCategoriaProducto},
+				#{idSubCategoriaProducto},
+				#{idUsuario})
+		</select>	
+	
+	<!-- Producto -->
+    
+     
+		
+	<select id="SQL_listaProducto" resultType="productoBeanIbatis"  >
+		SELECT 
+				idProducto as idProducto,
+				nombre as nombre,
+				precio as precio,
+				estado as estado,
+				descripcion as descripcion,
+				idTipoProducto as idTipoProducto,
+				idCategoriaProducto as idCategoriaProducto,
+				idSubCategoriaProducto as idSubCategoriaProducto ,
+				idUsuario as idUsuario
+		FROM 
+			PRODUCTO
+			
+		WHERE
+			estado=1
+		
+			
+	</select>
+	
+	<select id="SQL_buscaProducto" 	resultType="productoBeanIbatis" parameterType="int">
+		SELECT 
+				idProducto as idProducto,
+				nombre as nombre,
+				precio as precio,
+				imagen_bytes as ImagenBytes,
+				imagen_nombre as ImagenFileName,
+				imagen_content_type as ImagenContentType,
+				estado as estado,
+				descripcion as descripcion,
+				idTipoProducto as idTipoProducto,
+				idCategoriaProducto as idCategoriaProducto,
+				idSubCategoriaProducto as idSubCategoriaProducto ,
+				idUsuario as idUsuario 
+		FROM
+			PRODUCTO
+		WHERE
+			idProducto =  #{idProducto}
+	</select>	
+	
+	<select id="SQL_actualizaProducto" resultType="productoBeanIbatis">
+			UPDATE 
+				PRODUCTO
+			SET  
+				nombre = #{nombre}, 
+				precio = #{precio},
+				estado = #{estado},
+				descripcion = #{descripcion},
+				idTipoProducto = #{idTipoProducto},
+				idCategoriaProducto = #{idCategoriaProducto},
+				idSubCategoriaProducto = #{idSubCategoriaProducto},
+				idUsuario = #{idUsuario}
+			WHERE 
+				idProducto = #{idProducto} 
+	</select>
+	
+	<select id="SQL_eliminaProducto" resultType="productoBeanIbatis">
+			UPDATE 
+				PRODUCTO
+			SET  
+				estado = 2
+			WHERE 
+				idProducto = #{idProducto} 
+	</select>
+	
+	<select id="SQL_listaTipoProducto"  resultType="tipoProductoBeanIbatis"	>
+		SELECT 
+				idTipoProducto as idTipoProducto,
+				descripcion as descripcion
+		FROM 
+			TIPOPRODUCTO
+	</select>
+	
+	<select id="SQL_listaCategoriaProducto"  resultType="categoriaProductoBeanIbatis"	>
+		SELECT 
+				idCategoriaProducto as idCategoriaProducto,
+				descripcion as descripcion
+		FROM 
+			CATEGORIAPRODUCTO
+	</select>
+	
+	<select id="SQL_listaSubCategoriaProducto"  resultType="subcategoriaProductoBeanIbatis" parameterType="int"	>
+		SELECT 
+				idSubCategoriaProducto as idSubCategoriaProducto,
+				descripcion as descripcion
+		FROM 
+			SUBCATEGORIAPRODUCTO
+		WHERE
+			idCategoriaProducto = #{idCategoriaProducto} 
+	</select>
+	
+
+	
+	
+</mapper>
+
+
+
